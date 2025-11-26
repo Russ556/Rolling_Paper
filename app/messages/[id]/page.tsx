@@ -11,7 +11,7 @@ import { getMessagesByCabinetId } from "@/lib/api/messages"
 import { cn } from "@/lib/utils"
 
 type Message = {
-  id: string
+  id: number
   authorName: string
   content: string
   createdAt: string
@@ -42,7 +42,8 @@ export default function MessagesPage({ params }: { params: Promise<{ id: string 
 
   const loadMessages = async () => {
     setIsLoading(true)
-    const data = await getMessagesByCabinetId(id)
+    const cabinetId = parseInt(id, 10)
+    const data = await getMessagesByCabinetId(cabinetId)
 
     // Transform database format to UI format
     const transformedMessages: Message[] = data.map((msg) => ({

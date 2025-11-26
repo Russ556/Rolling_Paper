@@ -63,7 +63,8 @@ export default function WritePage({ params }: { params: Promise<{ id: string }> 
     setIsSubmitting(true)
 
     // Save message to Supabase
-    const message = await createMessage(id, authorName, content)
+    const cabinetId = parseInt(id, 10)
+    const message = await createMessage(cabinetId, authorName, content)
 
     if (message) {
       // Clear localStorage after successful submission

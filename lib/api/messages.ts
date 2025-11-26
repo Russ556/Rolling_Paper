@@ -2,7 +2,7 @@ import { supabase } from '../supabase'
 import type { Message } from '../database.types'
 
 export async function createMessage(
-    cabinetId: string,
+    cabinetId: number,
     authorName: string,
     content: string
 ): Promise<Message | null> {
@@ -20,7 +20,7 @@ export async function createMessage(
     return data
 }
 
-export async function getMessagesByCabinetId(cabinetId: string): Promise<Message[]> {
+export async function getMessagesByCabinetId(cabinetId: number): Promise<Message[]> {
     const { data, error } = await supabase
         .from('Rolling_Paper')
         .select('*')
@@ -35,7 +35,7 @@ export async function getMessagesByCabinetId(cabinetId: string): Promise<Message
     return data || []
 }
 
-export async function getMessageCount(cabinetId: string): Promise<number> {
+export async function getMessageCount(cabinetId: number): Promise<number> {
     const { count, error } = await supabase
         .from('Rolling_Paper')
         .select('*', { count: 'exact', head: true })

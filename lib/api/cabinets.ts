@@ -2,6 +2,8 @@ import { supabase } from '../supabase'
 import type { Cabinet, CabinetWithMessageCount } from '../database.types'
 
 export async function createCabinet(ownerName: string, password: string): Promise<Cabinet | null> {
+    console.log('Creating cabinet with owner:', ownerName)
+
     const { data, error } = await supabase
         .from('cabinets')
         .insert([{ owner_name: ownerName, password }])
@@ -10,9 +12,11 @@ export async function createCabinet(ownerName: string, password: string): Promis
 
     if (error) {
         console.error('Error creating cabinet:', error)
+        console.error('Error details:', JSON.stringify(error, null, 2))
         return null
     }
 
+    console.log('Cabinet created successfully:', data)
     return data
 }
 
@@ -45,7 +49,7 @@ export async function getCabinets(): Promise<CabinetWithMessageCount[]> {
     return cabinetsWithCounts
 }
 
-export async function getCabinetById(id: string): Promise<Cabinet | null> {
+export async function getCabinetById(id: number): Promise<Cabinet | null> {
     const { data, error } = await supabase
         .from('cabinets')
         .select('*')
@@ -60,7 +64,7 @@ export async function getCabinetById(id: string): Promise<Cabinet | null> {
     return data
 }
 
-export async function verifyCabinetPassword(id: string, password: string): Promise<boolean> {
+export async function verifyCabinetPassword(id: number, password: string): Promise<boolean> {
     const { data, error } = await supabase
         .from('cabinets')
         .select('password')
@@ -74,7 +78,7 @@ export async function verifyCabinetPassword(id: string, password: string): Promi
     return data.password === password
 }
 
-export async function deleteCabinet(id: string): Promise<boolean> {
+export async function deleteCabinet(id: number): Promise<boolean> {
     const { error } = await supabase
         .from('cabinets')
         .delete()

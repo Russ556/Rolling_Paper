@@ -19,7 +19,7 @@ import type { Cabinet } from "@/app/page"
 
 type DeleteCabinetDialogProps = {
     cabinet: Cabinet
-    onDelete: (cabinetId: string, password: string) => Promise<void>
+    onDelete: (cabinetId: number, password: string) => Promise<void>
 }
 
 export function DeleteCabinetDialog({ cabinet, onDelete }: DeleteCabinetDialogProps) {

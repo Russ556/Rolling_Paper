@@ -1,13 +1,13 @@
 export type Cabinet = {
-    id: string
+    id: number
     owner_name: string
     password: string
     created_at: string
 }
 
 export type Message = {
-    id: string
-    cabinet_id: string
+    id: number
+    cabinet_id: number
     author: string
     message: string
     created_at: string

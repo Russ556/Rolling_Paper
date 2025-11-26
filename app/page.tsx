@@ -11,7 +11,7 @@ import { getCabinets, createCabinet, verifyCabinetPassword, deleteCabinet } from
 import type { CabinetWithMessageCount } from "@/lib/database.types"
 
 export type Cabinet = {
-  id: string
+  id: number
   ownerName: string
   password: string
   messageCount: number
@@ -48,11 +48,19 @@ export default function Home() {
   }
 
   const handleCreateCabinet = async (cabinetData: { ownerName: string; password: string }) => {
-    const newCabinet = await createCabinet(cabinetData.ownerName, cabinetData.password)
+    try {
+      const newCabinet = await createCabinet(cabinetData.ownerName, cabinetData.password)
 
-    if (newCabinet) {
-      // Reload cabinets to get updated list
-      await loadCabinets()
+      if (newCabinet) {
+        // Reload cabinets to get updated list
+        await loadCabinets()
+        alert('캐비넷이 성공적으로 생성되었습니다!')
+      } else {
+        alert('캐비넷 생성에 실패했습니다. 브라우저 콘솔을 확인해주세요.')
+      }
+    } catch (error) {
+      console.error('Cabinet creation error:', error)
+      alert('캐비넷 생성 중 오류가 발생했습니다: ' + error)
     }
   }
 
@@ -61,7 +69,7 @@ export default function Home() {
     setIsRoleDialogOpen(true)
   }
 
-  const handleDeleteCabinet = async (cabinetId: string, password: string) => {
+  const handleDeleteCabinet = async (cabinetId: number, password: string) => {
     // Verify password
     const isValid = await verifyCabinetPassword(cabinetId, password)
 
