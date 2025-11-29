@@ -142,7 +142,7 @@ export default function MessagesPage({ params }: { params: Promise<{ id: string 
 
       {/* Carousel Modal */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent showCloseButton={false} className="max-w-4xl w-[95vw] h-[85vh] p-0 gap-0 bg-transparent border-none shadow-none sm:bg-transparent sm:shadow-none">
+        <DialogContent showCloseButton={false} className="max-w-4xl w-[95vw] h-[85vh] p-0 gap-0 bg-transparent border-none shadow-none sm:bg-transparent sm:shadow-none [&>[data-slot=dialog-close]]:hidden">
           <DialogTitle className="sr-only">메시지 상세 보기</DialogTitle>
           <div className="relative w-full h-full flex items-center justify-center">
 
