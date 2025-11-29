@@ -142,7 +142,7 @@ export default function MessagesPage({ params }: { params: Promise<{ id: string 
 
       {/* Carousel Modal */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-4xl w-[95vw] h-[85vh] p-0 gap-0 bg-transparent border-none shadow-none sm:bg-transparent sm:shadow-none">
+        <DialogContent showCloseButton={false} className="max-w-4xl w-[95vw] h-[85vh] p-0 gap-0 bg-transparent border-none shadow-none sm:bg-transparent sm:shadow-none">
           <DialogTitle className="sr-only">메시지 상세 보기</DialogTitle>
           <div className="relative w-full h-full flex items-center justify-center">
 
@@ -163,8 +163,15 @@ export default function MessagesPage({ params }: { params: Promise<{ id: string 
 
 // Separate component for the modal content to manage its own Embla Carousel state
 function CarouselModalContent({ messages, startIndex }: { messages: Message[]; startIndex: number }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, align: "center", startIndex })
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, align: "center" })
   const [currentIndex, setCurrentIndex] = useState(startIndex)
+
+  // Initialize to startIndex when emblaApi is ready
+  useEffect(() => {
+    if (emblaApi) {
+      emblaApi.scrollTo(startIndex, true) // true for instant scroll without animation
+    }
+  }, [emblaApi, startIndex])
 
   // Update current index when carousel scrolls
   useEffect(() => {
@@ -175,7 +182,7 @@ function CarouselModalContent({ messages, startIndex }: { messages: Message[]; s
     }
 
     emblaApi.on("select", onSelect)
-    emblaApi.on("reInit", onSelect) // Re-initialize on reInit (e.g., when dialog opens)
+    emblaApi.on("reInit", onSelect)
     onSelect() // Set initial index
 
     return () => {
@@ -184,17 +191,13 @@ function CarouselModalContent({ messages, startIndex }: { messages: Message[]; s
     }
   }, [emblaApi])
 
-  // Scroll to the correct start index when the modal is opened/re-rendered
-  useEffect(() => {
-    if (emblaApi && startIndex !== currentIndex) {
-      emblaApi.scrollTo(startIndex, false) // false for instant scroll
-      setCurrentIndex(startIndex)
-    }
-  }, [emblaApi, startIndex, currentIndex]);
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev()
+  }, [emblaApi])
 
-
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi])
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi])
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext()
+  }, [emblaApi])
 
   return (
     <div className="w-full h-full max-h-[80vh] bg-background rounded-xl shadow-2xl overflow-hidden flex flex-col">
